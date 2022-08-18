@@ -34,6 +34,10 @@ const makeBoard = (
   ) as any as Board
 }
 
+const copyBoard = (board: Board) => {
+  return JSON.parse(JSON.stringify(board))
+}
+
 /**
  * Vue integration layer
  * State is mutable
@@ -44,11 +48,10 @@ export const useTicTacToe = () => {
   const currentMark = computed(() => (turn.value % 2 == 0 ? "o" : "x"))
 
   const makeMark = ({ col, row }: { col: ColIdx; row: RowIdx }) => {
-    const newBoard = makeBoard(currentBoard.value, {
-      col,
-      row,
-      mark: currentMark.value,
-    })
+    // ボードをコピー
+    const newBoard = copyBoard(currentBoard.value)
+    // 指定した位置にマークをつける
+    newBoard[row][col] = currentMark.value
     boards.value.push(newBoard)
     turn.value += 1
   }
