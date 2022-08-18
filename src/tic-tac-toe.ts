@@ -1,6 +1,6 @@
 import { computed, ref } from "vue"
-export type Counter = "x" | "o" | "-"
-export type Row = readonly [Counter, Counter, Counter]
+export type Mark = "x" | "o" | "-"
+export type Row = readonly [Mark, Mark, Mark]
 export type Board = readonly [Row, Row, Row]
 export type ColIdx = 0 | 1 | 2
 export type RowIdx = 0 | 1 | 2
@@ -15,31 +15,31 @@ export const createGame = (initialState: Board[]) => {
   return [...initialState]
 }
 
-const makeMove = (
+const tmpMark = (
   board: Board,
   {
     col,
     row,
-    counter,
+    mark,
   }: {
     col: ColIdx
     row: RowIdx
-    counter: Counter
+    mark: Mark
   }
 ): {
   newBoard: Board
-  newCounter: Counter
+  newMark: Mark
 } => {
   const newBoard = board.map((theRow, rowIdx) =>
     theRow.map((cell, colIdx) =>
-      rowIdx === row && colIdx === col ? counter : cell
+      rowIdx === row && colIdx === col ? mark : cell
     )
   ) as any as Board
-  const newCounter = counter === "o" ? "x" : "o"
+  const newMark = mark === "o" ? "x" : "o"
 
   return {
     newBoard,
-    newCounter,
+    newMark,
   }
 }
 
@@ -49,15 +49,15 @@ const makeMove = (
  */
 export const useTicTacToe = () => {
   const boards = ref<Board[]>([initialBoard])
-  const counter = ref<Counter>("o")
-  const move = ({ col, row }: { col: ColIdx; row: RowIdx }) => {
-    const { newBoard, newCounter } = makeMove(currentBoard.value, {
+  const currentMark = ref<Mark>("o")
+  const makeMark = ({ col, row }: { col: ColIdx; row: RowIdx }) => {
+    const { newBoard, newMark } = tmpMark(currentBoard.value, {
       col,
       row,
-      counter: counter.value,
+      mark: currentMark.value,
     })
     boards.value.push(newBoard)
-    counter.value = newCounter
+    currentMark.value = newMark
   }
 
   const currentBoard = computed(() => {
@@ -66,6 +66,6 @@ export const useTicTacToe = () => {
 
   return {
     currentBoard,
-    makeMove: move,
+    makeMark,
   }
 }

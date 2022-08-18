@@ -1,7 +1,7 @@
 <template>
   <div v-for="(row, rowIdx) in currentBoard" :key="rowIdx" class="row">
     <div v-for="(col, colIdx) in row" :key="colIdx" class="col" :data-testid="`row-${rowIdx}-col-${colIdx}`"
-      :data-test="`row-${rowIdx}-col-${colIdx}`" @click="makeMove({ row: rowIdx, col: colIdx })">
+      :data-test="`row-${rowIdx}-col-${colIdx}`" @click="makeMark({ row: rowIdx, col: colIdx })">
       {{ col }}
     </div>
   </div>
@@ -12,11 +12,11 @@ import { useTicTacToe } from './tic-tac-toe';
 
 export default {
   setup(_props: {}) {
-    const { currentBoard, makeMove } = useTicTacToe()
+    const { currentBoard, makeMark } = useTicTacToe()
 
     return {
       currentBoard,
-      makeMove
+      makeMark
     }
   }
 }
