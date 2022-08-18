@@ -28,18 +28,14 @@ const tmpMark = (
   }
 ): {
   newBoard: Board
-  newMark: Mark
 } => {
   const newBoard = board.map((theRow, rowIdx) =>
     theRow.map((cell, colIdx) =>
       rowIdx === row && colIdx === col ? mark : cell
     )
   ) as any as Board
-  const newMark = mark === "o" ? "x" : "o"
-
   return {
     newBoard,
-    newMark,
   }
 }
 
@@ -49,15 +45,17 @@ const tmpMark = (
  */
 export const useTicTacToe = () => {
   const boards = ref<Board[]>([initialBoard])
-  const currentMark = ref<Mark>("o")
+  const turn = ref(0)
+  const currentMark = computed(() => (turn.value % 2 == 0 ? "o" : "x"))
+
   const makeMark = ({ col, row }: { col: ColIdx; row: RowIdx }) => {
-    const { newBoard, newMark } = tmpMark(currentBoard.value, {
+    const { newBoard } = tmpMark(currentBoard.value, {
       col,
       row,
       mark: currentMark.value,
     })
     boards.value.push(newBoard)
-    currentMark.value = newMark
+    turn.value += 1
   }
 
   const currentBoard = computed(() => {
